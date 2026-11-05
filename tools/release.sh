@@ -17,7 +17,7 @@ CAPS=read,actions,commands,ui # README "For server owners"
 RELEASE_REPO=projecthailstone/hailstone-autoaaspend
 DESCRIPTION="Spends your AA points for you: tick abilities in the AA window, in your order."
 AUTHOR="Project Hailstone"
-MIN_CLIENT=0.3.1-alpha # raise it to the first release with hailstone.alt_abilities, train_aa and lib/aa.lua
+MIN_CLIENT=0.4.0-alpha # the first release with hailstone.alt_abilities, train_aa and lib/aa.lua
 
 version=${1:?usage: tools/release.sh <version> [--publish]}
 version=${version#v}

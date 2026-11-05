@@ -110,9 +110,9 @@ enabled = off
 
 ## Needs
 
-A Hailstone client with `hailstone.alt_abilities`, `hailstone.train_aa` and the Modern UI's `lib/aa.lua` (the
-release after 0.3.0-alpha). With an older Modern UI, the AA window stays as it was and the Auto AA window still
-works. The Gamepad UI shows only the commands for now.
+A Hailstone client with `hailstone.alt_abilities`, `hailstone.train_aa` and the Modern UI's `lib/aa.lua`: 0.4.0-alpha or
+later. With an older Modern UI, the AA window stays as it was and the Auto AA window still works. The Gamepad UI
+shows only the commands for now.
 
 ## Development
 
