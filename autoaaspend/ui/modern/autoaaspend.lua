@@ -542,7 +542,11 @@ local function logPage(x, y, w, h, s)
   ui.EndChild()
 end
 
-local function body(x, y, w, h, s)
+local MARGIN = 14 -- between the frame's edge and the contents (design pixels); more at the top, clear of the close X
+
+local function body(x0, y0, w0, h0, s)
+  local m = MARGIN * s
+  local x, y, w, h = x0 + m, y0 + m + 8 * s, w0 - 2 * m, h0 - 2 * m - 8 * s
   local hh = header(x, y, w, s)
   local ty = y + hh + 10 * s
   local count = #S.list
@@ -555,8 +559,8 @@ local function body(x, y, w, h, s)
   if page == "queue" then queuePage(x, cy, w, ch, s)
   elseif page == "settings" then settingsPage(x, cy, w, ch, s)
   else logPage(x, cy, w, ch, s) end
-  ui.SetCursorScreenPos(x, y)
-  ui.Dummy(w, h)
+  ui.SetCursorScreenPos(x0, y0)
+  ui.Dummy(w0, h0)
 end
 
 local function readState()
@@ -574,7 +578,7 @@ ui.window("Auto AA", function()
   if not readState() or not st.open then return end
   hud.Window(nil, "Auto AA", {
     shown = function() return st.open end,
-    size = function() return 440, 560 end,
+    size = function() return 460, 590 end,
     resizable = { 380, 420 },
     place = function(W, H, w, h) return W - w - 40, H * 0.22 end,
     onClose = function() cmd("close") end,
