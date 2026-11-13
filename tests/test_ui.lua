@@ -10,7 +10,8 @@ local function stubs(opts)
   local ui = {
     Mouse = { Left = 0, Right = 1 },
     InputTextFlags = { CharsDecimal = 8 },
-    GetCursorScreenPos = zero, GetCursorPos = zero, GetMousePos = zero,
+    GetCursorScreenPos = zero, GetCursorPos = zero,
+    GetMousePos = function() return 0, opts.mouseY or 0 end,
     GetContentRegionAvail = function() return 400, 300 end,
     CalcTextSize = function(t) return #(t or "") * 6, 12 end,
     GetTime = function() return 1.5 end,
@@ -23,9 +24,9 @@ local function stubs(opts)
     BeginPopup = function() return false end,
     MenuItem = function() return false end,
     IsItemHovered = function() return opts.hover == true end,
-    IsItemActive = function() return false end,
-    IsMouseDown = function() return false end,
-    IsMouseDragging = function() return false end,
+    IsItemActive = function() return opts.dragging == true end,
+    IsMouseDown = function() return opts.dragging == true end,
+    IsMouseDragging = function() return opts.dragging == true end,
     window = function(name, fn) env.windows[name] = fn end,
     base_window = function() env.base = (env.base or 0) + 1 return true end,
   }
@@ -169,6 +170,20 @@ case("ui: Start, the row toggle, Auto Buy's switch and the search send the scrip
   check(all:find("start", 1, true) ~= nil, all)
   check(all:find("remove Innate Strength 10", 1, true) ~= nil, all)
   check(all:find("flip Not Queued 30", 1, true) ~= nil, "the AA row's toggle, with the ability's group: " .. all)
+end)
+
+case("ui: dragging a queue row draws from its first frame and drops it where the mouse lets go", function()
+  -- the frame a drag starts in drew the drop line before it knew where the drop would go (a nil 'to')
+  local opts = { state = sampleState(), settings = sampleSettings(), dragging = true }
+  local env = stubs(opts)
+  draw(env, "Auto AA")
+  draw(env, "Auto AA")
+  eq(#env.calls, 0, "nothing moves while the button is held")
+  opts.dragging, opts.mouseY = false, 60 -- let go over the second row (rows are 50 + 4 apart)
+  draw(env, "Auto AA")
+  local c = env.calls[1] or {}
+  eq(table.concat({ tostring(c[1]), tostring(c[2]), tostring(c[3]), tostring(c[4]) }, " "),
+    "move Innate Strength 10 2")
 end)
 
 case("ui: without the script, or on an older client, the AA window is the pack's own", function()
