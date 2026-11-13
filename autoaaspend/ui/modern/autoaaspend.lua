@@ -329,10 +329,6 @@ local function queuePage(x, y, w, h, s)
     local rowH = 50 * s
     local gap = 4 * s
     local mx, my = ui.GetMousePos()
-    local dropAt = nil
-    if drag then
-      dropAt = math.max(1, math.min(#list, math.floor((my - oy) / (rowH + gap)) + 1))
-    end
     for i, e in ipairs(list) do
       local es = entryState(i) or {}
       local y0 = oy + (i - 1) * (rowH + gap)
@@ -394,9 +390,9 @@ local function queuePage(x, y, w, h, s)
         cmd("remove", e.name, e.group)
       end
     end
-    -- the drop line while dragging
+    -- the drop line while dragging (worked out here: a drag can start in the rows above, this frame)
     if drag then
-      local to = dropAt
+      local to = math.max(1, math.min(#list, math.floor((my - oy) / (rowH + gap)) + 1))
       local ly = oy + (to - 1) * (rowH + gap) + (to > drag.from and (rowH + gap / 2) or (-gap / 2))
       ui.DrawRectFilled(ox, ly - 1.5 * s, ox + cw, ly + 1.5 * s, GOLD[1], GOLD[2], GOLD[3], 0.9, 1.5 * s)
       local e = list[drag.from]
