@@ -1,4 +1,4 @@
--- The pure parts of Auto AA, tested with plain Lua 5.4 (no client): lua5.4 tests/run.lua
+-- The pure parts of Auto AA, tested with plain Lua 5.5 or 5.4 (no client): lua5.5 tests/run.lua
 -- init.lua reads the game and is not covered here; tests/test_ui.lua draws the windows over stand-ins for the
 -- client's ui, eq and theme, to catch a nil call or a typo, not how they look.
 local root = arg[0]:match("^(.*)/tests/run%.lua$") or "."

@@ -116,5 +116,5 @@ shows only the commands for now.
 
 ## Development
 
-`lua5.4 tests/run.lua` runs the tests. They cover the settings, the choice of what to buy, and the windows drawn
-over stand-ins for the client. `tools/release.sh <version>` packs and signs a release (see the script's head).
+`lua5.5 tests/run.lua` runs the tests (5.4 works too). They cover the settings, the choice of what to buy, and the
+windows drawn over stand-ins for the client. `tools/release.sh <version>` packs and signs a release (see the script's head).
