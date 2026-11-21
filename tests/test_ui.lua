@@ -18,7 +18,10 @@ local function stubs(opts)
     GetIO = function() return { uiScale = 1 } end,
     InputTextWithHint = function(_, _, text) return opts.search or text end,
     InputText = function(_, text) return text, false end,
-    Checkbox = function(_, v) return v, false end,
+    Checkbox = function(label, v)
+      if opts.clicks and opts.clicks[label] then return not v, true end
+      return v, false
+    end,
     BeginChild = function() return true end,
     BeginPopupContextItem = function() return false end,
     BeginPopup = function() return false end,
@@ -184,6 +187,25 @@ case("ui: dragging a queue row draws from its first frame and drops it where the
   local c = env.calls[1] or {}
   eq(table.concat({ tostring(c[1]), tostring(c[2]), tostring(c[3]), tostring(c[4]) }, " "),
     "move Innate Strength 10 2")
+end)
+
+case("ui: a Settings checkbox unchecks as well as checks", function()
+  -- every box came back nil when unchecked, so once on, nothing on the page could be turned off
+  local S = sampleSettings()
+  S.prereqs, S.combat, S.fill.on, S.fill.tabs.general = true, false, true, true
+  local env = stubs({ state = sampleState(), settings = S, hits = { ["##aaspagesettings"] = true },
+    clicks = { ["Buy missing prerequisites first##aaspre"] = true, ["Buy during fights too##aascombat"] = true,
+      ["Buy the cheapest abilities on these tabs##aasfill"] = true, ["General##aastabgeneral"] = true } })
+  draw(env, "Auto AA")
+  draw(env, "Auto AA")
+  local got = {}
+  for _, c in ipairs(env.calls) do
+    if c[1] == "set" then got[c[2]] = c[3] end
+  end
+  eq(got["prereqs"], false)
+  eq(got["combat"], true)
+  eq(got["fill.on"], false)
+  eq(got["fill.tabs.general"], false)
 end)
 
 case("ui: without the script, or on an older client, the AA window is the pack's own", function()

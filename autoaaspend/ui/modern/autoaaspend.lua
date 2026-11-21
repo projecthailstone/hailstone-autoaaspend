@@ -206,7 +206,9 @@ local function tip(text) if ui.IsItemHovered() then ui.SetTooltip(text) end end
 
 local function check(text, value)
   local v, changed = ui.Checkbox(text, value)
-  return changed and v or nil
+  -- (not 'changed and v or nil': that turns an unchecked box's false into nil, and nothing could be unchecked)
+  if changed then return v end
+  return nil
 end
 
 local function number(id, value, width, lo, hi)
